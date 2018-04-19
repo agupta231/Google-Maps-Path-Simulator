@@ -35,7 +35,7 @@ def distance_between_points(source, destination):
         math.cos(final_lat)
 
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-    return earth_radius * c * 1000
+    return earth_radius * c * 1000 # Convert to meters
 
 def init_args():
     parser = argparse.ArgumentParser(description="""Google Maps Path Simulators: a utility to
@@ -55,8 +55,14 @@ def init_args():
                                 flat ground.""",
                         default=5)
 
-    # TODO: Add resolution arguement
-    # TODO: Add threads argument
+    parser.add_argument("-t", "--threads",
+                        help="The number of threads to run this program. Defaults at 4."
+                        default=4)
+
+    parser.add_argument("-r", "--resolution",
+                        help="""How many lat/long points each 'chunk' will hold. 
+                                Defaults at 10.""",
+                        default=10)
 
     return parser.parse_args()
 
@@ -73,22 +79,15 @@ with open(args.url, "r") as fh:
         coordinate = (float(line[1]), float(line[2]))
         coordinates.append(coordinate)
 
-# pool = ThreadPool(8)
+# pool = ThreadPool(args.threads)
 # 
 # elevations = pool.map(get_elevation, coordinates)
 # 
 # pool.close()
 # pool.join()
 
-distances = gmaps.distance_matrix([(42.274720000,-71.806640000),
-                                   (42.274760000,-71.806640000)],
-                                  [(42.274760000,-71.806640000),
-                                   (42.274820000,-71.806670000)])
-
 # print(coordinates)
 # print(elevations)
-# print(distances['rows'][0]['elements'][0]['distance']['value'])
-# print(distances)
 
 for i in range(3):
     print("{} -> {}".format(coordinates[i], coordinates[i + 1]))
