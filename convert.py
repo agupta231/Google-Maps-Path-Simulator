@@ -15,6 +15,7 @@ def get_elevation(location):
     return elevation['elevation']
 
 def distance_between_points(source, destination):
+    # Using the Haversine formula
     # [0] is latitude
     # [1] is longitude
 
@@ -59,7 +60,7 @@ def init_args():
 
     return parser.parse_args()
 
-
+# ==== Begin Script
 
 args = init_args()
 
@@ -84,12 +85,14 @@ distances = gmaps.distance_matrix([(42.274720000,-71.806640000),
                                   [(42.274760000,-71.806640000),
                                    (42.274820000,-71.806670000)])
 
-print(distance_between_points((42.274720000,-71.806640000), (42.274760000,-71.806640000)))
-
 # print(coordinates)
 # print(elevations)
 # print(distances['rows'][0]['elements'][0]['distance']['value'])
 # print(distances)
-# 
+
+for i in range(3):
+    print("{} -> {}".format(coordinates[i], coordinates[i + 1]))
+    print(distance_between_points(coordinates[i], coordinates[i + 1]))
+
 # for row in distances['rows']:
 #     print(row['elements'][0]['distance']['value'])
