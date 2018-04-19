@@ -56,13 +56,13 @@ def init_args():
                         default=5)
 
     parser.add_argument("-t", "--threads",
-                        help="The number of threads to run this program. Defaults at 4."
+                        help="The number of threads to run this program. Defaults at 4.",
                         default=4)
 
     parser.add_argument("-r", "--resolution",
                         help="""How many lat/long points each 'chunk' will hold. 
                                 Defaults at 10.""",
-                        default=10)
+                        default=50)
 
     return parser.parse_args()
 
@@ -79,19 +79,26 @@ with open(args.url, "r") as fh:
         coordinate = (float(line[1]), float(line[2]))
         coordinates.append(coordinate)
 
-# pool = ThreadPool(args.threads)
-# 
-# elevations = pool.map(get_elevation, coordinates)
-# 
-# pool.close()
-# pool.join()
+elevations_raw = []
+distance_sums = []
 
-# print(coordinates)
-# print(elevations)
+distance_sum = 0
+for i in range(len(coordinates)):
+    if i % args.resolution == 0 or i == len(coordinates) - 1:
+        elevations_raw.append(coordinates[i])
 
-for i in range(3):
-    print("{} -> {}".format(coordinates[i], coordinates[i + 1]))
-    print(distance_between_points(coordinates[i], coordinates[i + 1]))
+    if i == 0:
+        continue
 
-# for row in distances['rows']:
-#     print(row['elements'][0]['distance']['value'])
+    distance_sum += distance_between_points(coordinates[i - 1], coordinates[i])
+
+    if i % args.resolution == 0 or i == len(coordinates) - 1:
+        distance_sums.append(distance_sum)
+        distance_sum = 0
+
+pool = ThreadPool(args.threads)
+
+elevations = pool.map(get_elevation, elevations_raw)
+
+pool.close()
+pool.join()
