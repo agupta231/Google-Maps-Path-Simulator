@@ -18,4 +18,6 @@ parser.add_argument("--flat_ground_resistance_level",
                             flat ground.""",
                     default=5)
 
+# TODO: Add resolution arguement
+
 args = parser.parse_args()
