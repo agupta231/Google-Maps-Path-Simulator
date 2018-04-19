@@ -31,12 +31,10 @@ parser.add_argument("--flat_ground_resistance_level",
                     default=5)
 
 # TODO: Add resolution arguement
+# TODO: Add threads argument
 
 
 args = parser.parse_args()
-
-elevation = gmaps.elevation((42.274720000,-71.806640000))[0]
-print(elevation['elevation'])
 
 coordinates = []
 
