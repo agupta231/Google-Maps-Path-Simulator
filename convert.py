@@ -68,8 +68,10 @@ def init_args():
 
 # ==== Begin Script
 
+# Get user arguments
 args = init_args()
 
+# Get the coordinates along the path
 coordinates = []
 
 with open(args.url, "r") as fh:
@@ -79,6 +81,8 @@ with open(args.url, "r") as fh:
         coordinate = (float(line[1]), float(line[2]))
         coordinates.append(coordinate)
 
+
+# Split the coordinates into chunks based on user specifications
 elevations_raw = []
 distance_sums = []
 
@@ -96,6 +100,8 @@ for i in range(len(coordinates)):
         distance_sums.append(distance_sum)
         distance_sum = 0
 
+
+# Evaluate the elevations
 pool = ThreadPool(args.threads)
 
 elevations = pool.map(get_elevation, elevations_raw)
@@ -103,6 +109,7 @@ elevations = pool.map(get_elevation, elevations_raw)
 pool.close()
 pool.join()
 
+# Determine d_elevation / d_distance for each chunk
 deltas = []
 for i, summation in enumerate(distance_sums):
     deltas.append((elevations[i + 1] - elevations[i]) / summation)
