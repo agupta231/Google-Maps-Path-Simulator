@@ -1,5 +1,6 @@
 import googlemaps
 import argparse
+import json
 import sys
 
 parser = argparse.ArgumentParser(description="""Google Maps Path Simulators: a utility to
@@ -21,13 +22,20 @@ parser.add_argument("--flat_ground_resistance_level",
 
 # TODO: Add resolution arguement
 
+with open('key', 'r') as fh:
+    key = fh.readlines()[0].strip()
+
 args = parser.parse_args()
+gmaps = googlemaps.Client(key=key)
 
-coordinates = []
+elevation = gmaps.elevation((42.274720000,-71.806640000))[0]
+print(elevation['elevation'])
 
-with open(args.url, "r") as fh:
-    for line in fh.readlines():
-        line = line.strip().split(",")
-        coordinates.append([line[1], line[2]])
-
-print(coordinates)
+# coordinates = []
+# 
+# with open(args.url, "r") as fh:
+#     for line in fh.readlines():
+#         line = line.strip().split(",")
+#         coordinates.append([line[1], line[2]])
+# 
+# print(coordinates)
