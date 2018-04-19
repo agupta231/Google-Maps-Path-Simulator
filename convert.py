@@ -1,3 +1,4 @@
+# Imports
 from multiprocessing.dummy import Pool as ThreadPool
 import googlemaps
 import argparse
@@ -5,11 +6,18 @@ import math
 import json
 import sys
 
+# Key Verification
 with open('key', 'r') as fh:
     key = fh.readlines()[0].strip()
 
+# Hyper Parameters
 gmaps = googlemaps.Client(key=key)
+max_grade = 0.1 # Maximum slope of an average street. If your location has steeper raods,
+                # change this value accordingly.
+min_grade = -0.1 # Maximum downwards slope on an average street. This is basically the
+                 # point at which you aren't putting in effort to bike
 
+# Helper functions
 def get_elevation(location):
     elevation = gmaps.elevation(location)[0]
     return elevation['elevation']
@@ -64,6 +72,15 @@ def init_args():
                                 Defaults at 10.""",
                         default=50)
 
+    parser.add_argument('-a', '--accuracy',
+                        help="How many decimal points the machine's resistance goes to. \
+                              Defaults to 0.",
+                        default=0)
+
+    parser.add_argument('--miles',
+                        help="Flag if you want miles instead of km",
+                        action='store_true')
+
     return parser.parse_args()
 
 # ==== Begin Script
@@ -115,3 +132,24 @@ for i, summation in enumerate(distance_sums):
     deltas.append((elevations[i + 1] - elevations[i]) / summation)
 
 
+# Normalize over the bike resistance values
+normalized_deltas = []
+for delta in deltas:
+    if delta > 0:
+        value = (delta / max_grade) * \
+                (args.resistance_range - args.flat_ground_resistance_level) + \
+                args.flat_ground_resistance_level
+
+        if value > args.resistance_range:
+            value = args.resistance_range
+
+    elif delta == 0:
+        value = args.flat_ground_resistance_level
+    else:
+        value = args.flat_ground_resistance_level * \
+                (1 - (delta / min_grade))
+
+        if value < 0:
+            value = 0
+
+    normalized_deltas.append(round(value, args.accuracy))
