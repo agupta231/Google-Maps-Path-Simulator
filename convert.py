@@ -1,5 +1,6 @@
 import googlemaps
 import argparse
+import sys
 
 parser = argparse.ArgumentParser(description="""Google Maps Path Simulators: a utility to
         help simulate bike paths on stationary bikes.""")
@@ -21,3 +22,12 @@ parser.add_argument("--flat_ground_resistance_level",
 # TODO: Add resolution arguement
 
 args = parser.parse_args()
+
+coordinates = []
+
+with open(args.url, "r") as fh:
+    for line in fh.readlines():
+        line = line.strip().split(",")
+        coordinates.append([line[1], line[2]])
+
+print(coordinates)
