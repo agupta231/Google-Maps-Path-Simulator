@@ -22,20 +22,30 @@ parser.add_argument("--flat_ground_resistance_level",
 
 # TODO: Add resolution arguement
 
+
+args = parser.parse_args()
+
 with open('key', 'r') as fh:
     key = fh.readlines()[0].strip()
 
-args = parser.parse_args()
 gmaps = googlemaps.Client(key=key)
 
 elevation = gmaps.elevation((42.274720000,-71.806640000))[0]
 print(elevation['elevation'])
 
-# coordinates = []
-# 
-# with open(args.url, "r") as fh:
-#     for line in fh.readlines():
-#         line = line.strip().split(",")
-#         coordinates.append([line[1], line[2]])
-# 
-# print(coordinates)
+coordinates = []
+elevations = []
+
+with open(args.url, "r") as fh:
+    for line in fh.readlines():
+        line = line.strip().split(",")
+
+        coordinate = (float(line[1]), float(line[2]))
+        elevation = gmaps.elevation(coordinate)[0]
+        print(elevation)
+
+        coordinates.append(coordinate)
+        elevations.append(elevation['elevation'])
+
+print(coordinates)
+print(elevations)
