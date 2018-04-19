@@ -102,3 +102,9 @@ elevations = pool.map(get_elevation, elevations_raw)
 
 pool.close()
 pool.join()
+
+deltas = []
+for i, summation in enumerate(distance_sums):
+    deltas.append((elevations[i + 1] - elevations[i]) / summation)
+
+
