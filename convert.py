@@ -43,26 +43,6 @@ def distance_between_points(source, destination):
 
     return R * c * 1000
 
-def distance_between_points_(source, destination):
-
-    def to_radians(deg):
-        return deg * math.pi / 180
-
-    earth_radius = 6371 # in km
-    
-    lat_differential = to_radians(destination[0] - source[0])
-    long_differential = to_radians(destination[1] - source[1])
-    initial_lat = to_radians(source[0])
-    final_lat = to_radians(source[1])
-
-    a = math.sin(lat_differential / 2) ** 2 + \
-        math.sin(long_differential / 2) ** 2 * \
-        math.cos(initial_lat) * \
-        math.cos(final_lat)
-    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-
-    return earth_radius * c * 1000
-
 def km_to_miles(km):
     return km * 0.621371
 
