@@ -57,13 +57,10 @@ flags can be passed:
 | ------- | ---------- | ------ |
 | `--url` | a filename | specify which file contains the lat/long data. Defaults to `url` |
 | `--resistance_range` | a number | The maximum resistance on a bike. Defaults to 10 |
-| `--flat_ground_resistance_level` | a number | The resistance that feels you are biking on 
-  level ground |
+| `--flat_ground_resistance_level` | a number | The resistance that feels you are biking on level ground |
 | `-t` | a number | How many threads you want the script to run on |
-| `--resolution` | a number | How many lat / long points each "chunk" will hold. Defaults to
-50 |
-| `--accuracy` | a number |  How many decimal points the machine's resistance goes. 
-Defaults at 0. |
+| `--resolution` | a number | How many lat / long points each "chunk" will hold. Defaults to 50 |
+| `--accuracy` | a number |  How many decimal points the machine's resistance goes.  Defaults at 0. |
 | `--miles` | None | Flag, if you want miles instead of km. Defaults to km. |
 
 There are also some hyper parameters in the code:
