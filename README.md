@@ -19,7 +19,11 @@ in a file named `key` in the root folder.
 
 ## Running the script
 This script uses an outside source to convert the Google Maps URL into a list of lat / long
-points that it can read. *Perhaps some contributor would like to integrate this
-functionality into this script*. 
+points that it can read. **Perhaps some contributor would like to integrate this
+functionality into this script.**
 
 Follow [http://www.gpsvisualizer.com/convert_input](http://www.gpsvisualizer.com/convert_input)
+to convert your Google Maps URL into a list of latitude / longitude. After following the
+link, you should be greeted with the following form:
+
+![form](https://i.imgur.com/46loKc2.png)
