@@ -139,7 +139,6 @@ for i in range(len(coordinates)):
         distance_sums.append(distance_sum)
         distance_sum = 0
 
-print(sum(distance_sums))
 # Evaluate the elevations
 pool = ThreadPool(args.threads)
 
@@ -176,9 +175,6 @@ for delta in deltas:
 
     normalized_deltas.append(round(value, args.accuracy))
 
-print(normalized_deltas)
-print(sum(distance_sums))
-
 # Print the values
 running_total = 0
 for i, resistance in enumerate(normalized_deltas):
@@ -193,10 +189,3 @@ for i, resistance in enumerate(normalized_deltas):
                 round(running_total, distance_accuracy)))
 
         running_total = 0
-
-print("dab")
-
-for i in range(len(normalized_deltas)):
-    print("Bike at resistance {} for {} km".format(normalized_deltas[i], 
-                round(distance_sums[i] / 1000, distance_accuracy)))
-
