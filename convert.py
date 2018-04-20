@@ -14,8 +14,8 @@ with open('key', 'r') as fh:
 gmaps = googlemaps.Client(key=key)
 max_grade = 0.1 # Maximum slope of an average street. If your location has steeper raods,
                 # change this value accordingly.
-min_grade = -0.1 # Maximum downwards slope on an average street. This is basically the
-                 # point at which you aren't putting in effort to bike
+min_grade = -0.05 # Maximum downwards slope on an average street. This is basically the
+                  # point at which you aren't putting in effort to bike
 distance_accuracy = 2 # Number of decimal places to output for the distance
 
 # Helper functions
