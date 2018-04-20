@@ -2,7 +2,7 @@
 from multiprocessing.dummy import Pool as ThreadPool
 import googlemaps
 import argparse
-import math
+import math 
 import json
 import sys
 
@@ -16,6 +16,7 @@ max_grade = 0.1 # Maximum slope of an average street. If your location has steep
                 # change this value accordingly.
 min_grade = -0.1 # Maximum downwards slope on an average street. This is basically the
                  # point at which you aren't putting in effort to bike
+distance_accuracy = 2 # Number of decimal places to output for the distance
 
 # Helper functions
 def get_elevation(location):
@@ -43,7 +44,10 @@ def distance_between_points(source, destination):
         math.cos(final_lat)
 
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-    return earth_radius * c * 1000 # Convert to meters
+    return earth_radius * c * 1000
+
+def km_to_miles(km):
+    return km * 0.621371
 
 def init_args():
     parser = argparse.ArgumentParser(description="""Google Maps Path Simulators: a utility to
@@ -103,8 +107,12 @@ with open(args.url, "r") as fh:
 elevations_raw = []
 distance_sums = []
 
+asdf = []
+
 distance_sum = 0
 for i in range(len(coordinates)):
+    asdf.append(distance_between_points(coordinates[i - 1], coordinates[i]))
+
     if i % args.resolution == 0 or i == len(coordinates) - 1:
         elevations_raw.append(coordinates[i])
 
@@ -117,6 +125,7 @@ for i in range(len(coordinates)):
         distance_sums.append(distance_sum)
         distance_sum = 0
 
+print(sum(asdf))
 
 # Evaluate the elevations
 pool = ThreadPool(args.threads)
@@ -153,3 +162,20 @@ for delta in deltas:
             value = 0
 
     normalized_deltas.append(round(value, args.accuracy))
+
+print(normalized_deltas)
+
+# Print the values
+running_total = 0
+for i, resistance in enumerate(normalized_deltas):
+    running_total += distance_sums[i] / 1000
+
+    if i == len(normalized_deltas) - 1 or resistance != normalized_deltas[i + 1]:
+        if args.miles:
+            print("Bike at resistance {} for {} miles".format(resistance, 
+                round(km_to_miles(running_total), distance_accuracy)))
+        else:
+            print("Bike at resistance {} for {} km".format(resistance, 
+                round(running_total, distance_accuracy)))
+
+        running_total = 0
