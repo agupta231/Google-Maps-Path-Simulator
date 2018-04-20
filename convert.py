@@ -90,7 +90,7 @@ def init_args():
 
     parser.add_argument("-r", "--resolution",
                         help="""How many lat/long points each 'chunk' will hold. 
-                                Defaults at 10.""",
+                                Defaults at 50.""",
                         default=50)
 
     parser.add_argument('-a', '--accuracy',
