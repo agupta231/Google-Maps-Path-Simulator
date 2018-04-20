@@ -2,7 +2,7 @@
 from multiprocessing.dummy import Pool as ThreadPool
 import googlemaps
 import argparse
-import math 
+from math import *
 import json
 import sys
 
@@ -28,6 +28,23 @@ def distance_between_points(source, destination):
     # [0] is latitude
     # [1] is longitude
 
+    R = 6373.0
+
+    lat1 = radians(source[0])
+    lon1 = radians(source[1])
+    lat2 = radians(destination[0])
+    lon2 = radians(destination[1])
+
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+
+    a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+    return R * c * 1000
+
+def distance_between_points_(source, destination):
+
     def to_radians(deg):
         return deg * math.pi / 180
 
@@ -42,8 +59,8 @@ def distance_between_points(source, destination):
         math.sin(long_differential / 2) ** 2 * \
         math.cos(initial_lat) * \
         math.cos(final_lat)
-
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+
     return earth_radius * c * 1000
 
 def km_to_miles(km):
@@ -107,11 +124,8 @@ with open(args.url, "r") as fh:
 elevations_raw = []
 distance_sums = []
 
-asdf = []
-
 distance_sum = 0
 for i in range(len(coordinates)):
-    asdf.append(distance_between_points(coordinates[i - 1], coordinates[i]))
 
     if i % args.resolution == 0 or i == len(coordinates) - 1:
         elevations_raw.append(coordinates[i])
@@ -125,8 +139,7 @@ for i in range(len(coordinates)):
         distance_sums.append(distance_sum)
         distance_sum = 0
 
-print(sum(asdf))
-
+print(sum(distance_sums))
 # Evaluate the elevations
 pool = ThreadPool(args.threads)
 
@@ -164,6 +177,7 @@ for delta in deltas:
     normalized_deltas.append(round(value, args.accuracy))
 
 print(normalized_deltas)
+print(sum(distance_sums))
 
 # Print the values
 running_total = 0
@@ -179,3 +193,10 @@ for i, resistance in enumerate(normalized_deltas):
                 round(running_total, distance_accuracy)))
 
         running_total = 0
+
+print("dab")
+
+for i in range(len(normalized_deltas)):
+    print("Bike at resistance {} for {} km".format(normalized_deltas[i], 
+                round(distance_sums[i] / 1000, distance_accuracy)))
+
