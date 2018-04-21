@@ -89,6 +89,13 @@ def init_args():
 # Get user arguments
 args = init_args()
 
+args.resolution = int(args.resolution)
+args.resistance_range = int(args.resistance_range)
+args.flat_ground_resistance_level = int(args.flat_ground_resistance_level)
+args.threads = int(args.threads)
+args.resolution = int(args.resolution)
+args.accuracy = int(args.accuracy)
+
 # Get the coordinates along the path
 coordinates = []
 
